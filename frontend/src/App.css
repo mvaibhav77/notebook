@@ -1,0 +1,111 @@
+@import url("https://fonts.googleapis.com/css2?family=Indie+Flower&display=swap");
+
+:root {
+  --bg-notebook: #1a1a1a;
+  --text-yellow: #f1c40f;
+  --line-yellow: rgba(241, 196, 15, 0.2);
+  --line-height: 32px;
+}
+
+body {
+  background: #121212;
+  margin: 0;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: "Indie Flower", cursive;
+  overflow: hidden;
+}
+
+.notebook-container {
+  perspective: 1500px;
+  width: 90%;
+  max-width: 800px;
+  height: 80vh;
+  position: relative;
+}
+
+.page-wrapper {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transform-style: preserve-3d;
+  transform-origin: left center;
+  transition: transform 1.2s cubic-bezier(0.645, 0.045, 0.355, 1);
+  box-shadow: 5px 5px 20px rgba(0, 0, 0, 0.5);
+  background: var(--bg-notebook);
+  border-radius: 4px;
+}
+
+.page-wrapper.flipping {
+  transform: rotateY(-160deg);
+}
+
+/* Texture and Lines */
+.front {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  padding: 24px 40px 40px 50px;
+  box-sizing: border-box;
+  background-image: linear-gradient(var(--line-yellow) 1px, transparent 1px);
+  background-size: 100% var(--line-height);
+  background-position: 0 24px;
+  border-left: 3px solid rgba(0, 0, 0, 0.3);
+  /* ensure front sits on top so textarea can receive focus */
+  z-index: 2;
+}
+
+.back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  background: #151515;
+  transform: rotateY(180deg);
+  border-right: 3px solid rgba(0, 0, 0, 0.3);
+  /* don't intercept clicks when back is hidden */
+  z-index: 1;
+  pointer-events: none;
+}
+
+textarea {
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  border: none;
+  outline: none;
+  resize: none;
+  color: var(--text-yellow);
+  font-size: 1.5rem;
+  font-family: "Indie Flower", cursive;
+  line-height: var(--line-height);
+  margin-top: -3px; /* Fine-tune text to sit ON the line */
+}
+
+/* Button */
+.controls {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+}
+
+button {
+  background: transparent;
+  border: 1px solid var(--text-yellow);
+  color: var(--text-yellow);
+  padding: 10px 20px;
+  font-family: "Indie Flower", cursive;
+  font-size: 1.2rem;
+  cursor: pointer;
+  border-radius: 255px 15px 225px 15px/15px 225px 15px 255px;
+  transition: 0.3s;
+}
+
+button:hover {
+  background: var(--line-yellow);
+}

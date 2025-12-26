@@ -1,0 +1,43 @@
+version: "3.8"
+
+services:
+  # 1. Database
+  db:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: notebook_user
+      POSTGRES_PASSWORD: notebook_password
+      POSTGRES_DB: notebook_db
+      PORT: 5555
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5555:5432"
+
+  # 2. Backend
+  backend:
+    build: ./backend
+    ports:
+      - "5000:5000"
+    environment:
+      - DB_HOST=db
+      - DB_USER=notebook_user
+      - DB_PASSWORD=notebook_password
+      - DB_NAME=notebook_db
+    depends_on:
+      - db
+
+  # 3. Frontend
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    # Hot Reloading support
+    volumes:
+      - ./frontend/src:/app/src
+
+volumes:
+  pg_data:
